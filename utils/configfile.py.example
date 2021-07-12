@@ -1,0 +1,21 @@
+CALDERA_URL = "http://X.X.X.X:8888"
+CALDERA_API_URL = CALDERA_URL + "/api/rest"
+CALDERA_ACCESS_URL = CALDERA_URL + "/plugin/access/abilities"
+CALDERA_ACCESS_XPL_URL = CALDERA_URL + "/plugin/access/exploit"
+CALDERA_API_KEY = "KEY"
+
+
+# The Type of deployment of Elastic SIEM, possible values: "onprem", "cloud"
+deployment_type = "deploy_type"
+
+# Onprem Vars
+kibana_onprem = "http://X.X.X.X:5601"
+api_base64 = "generatedapikeybase64=="
+
+# Cloud Vars
+kibana_host = "https://Kibanahost.url.aws.cloud.es.io"
+cloud_id = "CLOUD_ID:BASE64=="
+
+# Kibana Creds
+http_auth_user = "elastic_user"
+http_auth_pass = "elastic_pass"

@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+elasticsearch = "*"
+pyyaml = "*"
+pysftp = "*"
+setuptools-rust = "*"
+colorlog = "*"
+reportlab = "*"
+pandas = "*"
+matplotlib = "*"
+PyPDF2 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

@@ -1,0 +1,79 @@
+04/23/2021
+------------
+- Version 0.2
+        - Add support to On-Premise Elastic Deployments
+        - New Basic Summary Table on the Report
+        - Multiple Alert support on Elastic Query
+        - Removal of Legacy Execution Modes
+        - Lots of Error Handling improvements
+        - Fix on On-Demand Execution
+
+04/23/2021
+------------
+- Version 0.1.0
+        - Implemented the Logging Capabilities in every Execution Mode
+        - Adds Healthchecks for Disabled Rules and Rules with Execution errors
+        - Adds Individual Easy Mode
+        - Fix a big bug on the retrieval of the Elastic SIEM rules
+        - Changes functions to use rule_id instead of id
+        - Small improvements:
+                - Parsing of Ability files
+                - Reduced the ammount of the default output messages
+                - Adds Pipfile
+                - Better handling of the output CSV file
+                - Remove hardcoded values for output
+        - Small bug fixes:
+                - Permission error on report generation
+                - Argument errors in multiple functions
+
+04/21/2021
+------------
+- Version 0.0.9
+        - Adds Paralel Batch Execution Capability
+        - Adds Logging Capabilities
+
+03/26/2021
+------------
+- Version 0.0.8
+        - Adds PDF Reporting Capabilities
+        - Remove Hardcoded Output files
+
+03/23/2021
+------------
+- Version 0.0.7
+        - Adds Real Batch Execution and migrates the older one to "Menu"
+        - Huge improvements to the CSV output
+        - Ability to define how long to wait for the Alert
+        - Export Failed results to the CSV file
+
+02/09/2021
+------------
+- Version 0.0.6
+        - Primal of the export of results to csv
+        - Moved helpers that were in back.py to helpers.py
+
+01/29/2021
+------------
+- Version 0.0.5
+        - Adjusted the batch execution flow to use the new functionality
+        - Fixed various bugs found in the execution
+
+01/25/2021
+------------
+- Version 0.0.4
+        - Adds functionality to execute the rule on demand at the individual execution
+        - Adds functionality to obtain the rule ID associated with the Alert
+        - Adjust get_detection_rules() and check_if_exists_on_elastic() to work with rulenamedict dictionary
+
+01/19/2021
+------------
+- Version 0.0.3
+        - Adds the capability of retrieve all enable rules on Elastic and checking if the Alert to be tested exists on the cluster
+
+
+01/19/2021
+------------
+- Version 0.0.2
+        - Fix dependency missing
+        - Adds Code to Individual execution
+        - Adds a function to check if a single Ability exists on caldera

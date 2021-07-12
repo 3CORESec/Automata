@@ -1,0 +1,10 @@
+requests
+elasticsearch
+PyYAML
+pysftp
+setuptools_rust
+colorlog
+PyPDF2
+reportlab
+pandas
+matplotlib

@@ -1,0 +1,5 @@
+CALDERA_HOST = "XX.XXX.XX.XXX"
+SSH_KEY = "path/to/pem.pem"
+SSH_USER = "exampleuser"
+local_folder = "C:/path/to/the/ability/folder/windows"
+remote_folder = "/home/user/caldera/plugins/access/data/abilities/custom"
