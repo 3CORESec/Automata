@@ -1,0 +1,22 @@
+{
+    "ability_id_1": [
+        {
+            "trait": "field1",
+            "value": "value1"
+        },
+        {
+            "trait": "field2",
+            "value": "value2"
+        }
+    ],
+    "ability_id_2": [
+        {
+            "trait": "field1",
+            "value": "value1"
+        },
+        {
+            "trait": "field2",
+            "value": "value2"
+        }
+    ]
+}
