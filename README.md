@@ -6,7 +6,7 @@
 
 Automata is a tool to detect errors early and measure the Effectiveness of SIEM rules against the behaviors that the rule was developed to work against, ensuring that the whole process of data collection, parsing, and query of security data is working properly and alert when things don't work as intended.
 
-Read more about Automata in our [introductory blog post](https://blog.3coresec.com/2021/06/detection-as-code-dac-challenges.html).
+Read more about Automata in our [introductory blog post](https://blog.3coresec.com/2021/08/detection-as-code-dac-challenges.html).
 
 [@_w0rk3r](https://twitter.com/_w0rk3r/) and [@heyibrahimkhan](https://twitter.com/heyibrahimkhan) are the primary authors of Automata.
 
