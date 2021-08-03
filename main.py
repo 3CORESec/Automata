@@ -77,10 +77,6 @@ elif args.individual_easy:
         logger.info("Ability Found in the Caldera Server and Alert Found in the Elastic Cluster")
         rule_id = get_rule_id(ruleset, sigma_rule_name)
         alertname = get_alert_name((set_get_correct_slash(args.sigmafolder) + set_get_correct_slash(eval(ability["rules"])[0])))
-        # print(rule_id)
-        # print(alertname)
-        # print(ability['rules'])
-        # input('here?')
         enabled, execstatus = elastic_get_rule_status(rule_id)
         if elastic_rule_health(enabled, execstatus, args.output, alertname, abilityid) == False:
             logger.warning("The detection '{}' is disabled or having errors on execution. Skipping".format(alertname))

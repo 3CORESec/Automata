@@ -74,8 +74,6 @@ def get_rule_id(ruleset, rulename):
       if type(rulename) == list: temp = rulename[0]
       
       if temp in ruleset[i]["Name"]:
-          # print('rulename[0]: {}'.format(temp))
-          # input('here4...')
           return ruleset[i]["RuleID"]
 
 def get_rule_ids(ruleset, rulenamedict):
@@ -135,7 +133,6 @@ def initialize_csv(csv_output):
 
 def export_results(csv_output, alertname, alertdata, result, abilityid):
   try:
-    
     temp = ''
     if type(alertname) == str: temp = alertname
     elif type(alertname) == list: temp = alertname[0]

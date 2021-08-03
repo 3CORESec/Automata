@@ -1,7 +1,5 @@
 # Automata
 
-<p align="center"><img src="./imgs/automata-logo.png" width="400" height="415"></p>
-
 ## What
 
 Automata is a tool to detect errors early and measure the Effectiveness of SIEM rules against the behaviors that the rule was developed to work against, ensuring that the whole process of data collection, parsing, and query of security data is working properly and alert when things don't work as intended.
@@ -29,7 +27,6 @@ Some common examples are:
 Once a problem is identified early, SOC teams can fix these problems before this impacts the detection and response program.
 
 # Setup
-  
 ## Tech Stack
 
 This project uses:

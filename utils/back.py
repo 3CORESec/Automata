@@ -165,9 +165,6 @@ def elastic_get_rule_status(rule_id):
     if rule_id == None: return
     detection_engine = kibana_url + '/api/detection_engine/rules?rule_id=' + rule_id
     response = requests.get(detection_engine, auth=(configfile.http_auth_user,configfile.http_auth_pass)).json()
-    # print(rule_id)
-    # pprint(response)
-    # input('here3...')
     status = response['enabled']
     execstatus = response['status']
     return status, execstatus
@@ -222,7 +219,6 @@ def get_elastic_alerts(rulenamedict, rule_lookup_time="5m"):
       }
     ]
   }
-  pprint(query_body)
   alerts = es.search(index=".siem-signals-default*", body=query_body, size=1000)
   hits = alerts["hits"]["total"]["value"]
   if hits > 1:
