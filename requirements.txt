@@ -8,3 +8,4 @@ PyPDF2
 reportlab
 pandas
 matplotlib
+urllib3
