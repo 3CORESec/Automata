@@ -70,7 +70,7 @@ Password Variables:
 
 In the example below we'll task Automata with the goal of validating an AWS S3 detection, where logging on a bucket is disabled:
 
-[![asciicast](https://asciinema.org/a/429659.svg)](https://asciinema.org/a/429659)
+[![asciicast](https://asciinema.org/a/WNxw2QKE2sl5Sg0GXHFler4UQ)
 
 ## Run Modes
 
