@@ -66,50 +66,58 @@ Password Variables:
 
 # Usage
 
+## See it in action! 
+
+In the example below we'll task Automata with the goal of validating an AWS S3 detection, where logging on a bucket is disabled:
+
+[![asciicast](https://asciinema.org/a/429659.svg)](https://asciinema.org/a/429659)
+
+## Run Modes
+
 There are currently three modes of execution: `Individual Easy`, `Batch` and `Batch Execution In Parallel`.
 
 1. `Individual Easy` executes the workflow for a single Ability.
 2. `Batch` executes a list of abilities, one by one.
 3. `Batch Execution In Parallel` executes a list of abilities concurrently.
 
-## 1. Individual Easy:
+### 1. Individual Easy:
 
-### Required params:
+**Required params:**
 
 * `-ie`: Switch to enable "Individual Easy" execution type.
 * `-afp`: Path to the ability file.
 * `-s`: Path to sigma folder. This path when combined with rules path from ability file, makes up the path to the ability relevant rule file. 
 
-### Example:
+**Example:**
 
 ```
 python.exe .\main.py -afp ..\caldera\detection-validation\cloud\aws\guardduty\aws_guardduty_finding_archived.yml -s ..\sigma\rules\ -t jilffn
 ```
 
-## 2. Batch:
+### 2. Batch:
 
-### Required params:
+**Required params:**
 
 * `-t`: The Target Caldera Agent
 * `-af`: The folder containing the Caldera ability files
 * `-s`: The folder containing the Sigma Rules installed on the Elastic SIEM
 
-### Example:
+**Example:**
 
 ```
 python .\main.py -t zbuvyg -af 'C:/Users/Jonhnathan/Downloads/caldera-main/caldera-main/detection-validation/windows/' -s "C:/Users/Jonhnathan/Downloads/sigma-master/sigma-master/rules/endpoint/windows/"
 ```
 
-## 3. Batch Execution In Parallel:
+### 3. Batch Execution In Parallel:
 
-### Required params:
+**Required params:**
 
 * `-beip`: Switch that enables "Batch Execution In Parallel" execution type.
 * `-t`: The Target Caldera Agent
 * `-af`: The folder containing the Caldera ability files
 * `-s`: The folder containing the Sigma Rules installed on the Elastic SIEM
 
-### Example:
+**Example:**
 
 ```
 python.exe .\main.py -beip -af ..\caldera\detection-validation\cloud\aws\guardduty\ -s ..\sigma\rules\ -t dixiib;
