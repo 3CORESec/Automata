@@ -29,7 +29,9 @@ Some common examples are:
 Once a problem is identified early, SOC teams can fix these problems before this impacts the detection and response program.
 
 # Setup
-  
+
+<p align="center"><img src="./imgs/automata-workflow.png" width="700" height="598"></p>
+
 ## Tech Stack
 
 This project uses:
