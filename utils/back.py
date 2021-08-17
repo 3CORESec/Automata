@@ -21,40 +21,6 @@ logger.setLevel(logging.WARNING)
 
 execution_time = 0
 
-def create_operation(op_name):
-    op_json = {
-        "index": "operations",
-        "name": op_name,
-        "state": "running",
-        "autonomous": "0"
-    }
-    req_headers = {
-        'KEY': configfile.CALDERA_API_KEY
-    }
-    response = requests.put(configfile.CALDERA_API_URL, headers=req_headers, json=op_json)
-    return response.json()
-
-def get_agents():
-  get_agent_json = {
-      "index": "agents"
-  }
-  req_headers = {
-      'KEY': configfile.CALDERA_API_KEY
-  }
-  response = requests.post(configfile.CALDERA_API_URL, headers=req_headers, json=get_agent_json).json()
-  agents = []
-  for item in response:
-      hostname = item["host"]
-      paw = item["paw"]
-      os = item["platform"]
-      last_seen = item["last_seen"]
-      username = item["username"]
-      privilege = item["privilege"]
-      agents.append([hostname, paw, os, last_seen, username, privilege])
-  return agents
-
-
-# def get_abilities(paw, ability_id=''):
 def get_abilities(paw, logger):
   try:
     pass_agent = {
@@ -67,9 +33,6 @@ def get_abilities(paw, logger):
     dict_abilities = dict()
     num = 0
     for item in response:
-      # if ability_id == item.get('ability_id'):
-      #   pprint(item)
-      #   input()
       dict_abilities[num] = {}
       dict_abilities[num]['Name'] = item["name"]
       dict_abilities[num]['id'] = item["ability_id"]
@@ -127,8 +90,6 @@ def check_single_on_caldera(id, ability_pool, logger):
   ret = False
   for i in range(0,len(ability_pool)):
     if id == ability_pool[i]['id']:
-      # pprint(ability_pool[i])
-      # input()
       ret = True
       logger.info('Ability ID: {} found in caldera'.format(id))
       break
