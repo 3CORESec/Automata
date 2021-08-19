@@ -36,10 +36,6 @@ def get_abilities(paw, logger):
       dict_abilities[num] = {}
       dict_abilities[num]['Name'] = item["name"]
       dict_abilities[num]['id'] = item["ability_id"]
-      try:
-        dict_abilities[num]['rules'] = item['additional_info']['rules']
-      except:
-        pass
       num += 1
     return dict_abilities
   except requests.exceptions.ConnectionError:
@@ -71,18 +67,32 @@ def execute_ability(paw, ability_id, logger, ability_args=None):
   if response == 'complete':
     logger.info("Agent {} Tasked with the ability_id {}".format(paw, ability_id))
   return response
-  
-def check_on_caldera(ids, ability_pool, sigmafolder):
+
+def get_rules(relationfile):
+  rules = []
+  with open(relationfile) as j:
+    data = json.load(j)
+    for i in data['Automata']:
+        rules.append(i["RuleID"])
+  return rules
+
+def get_rule_id(relationfile, abilityid):
+  with open(relationfile) as j:
+    data = json.load(j)
+    for i in data['Automata']:
+        if i["AbilityID"] == abilityid:
+            return i["RuleID"]
+        else:
+            return
+
+def check_on_caldera(ids, ability_pool, relationfile, ruleset):
   ready_to_use = {}
   num = 0
   for i in range(0,len(ability_pool)):
-    if ability_pool[i]['id'] in ids and 'rules' in ability_pool[i].keys():
+    if ability_pool[i]['id'] in ids:
       ready_to_use[num] = {}
       ready_to_use[num]['Name'] = ability_pool[i]["Name"]
       ready_to_use[num]['id'] = ability_pool[i]["id"]
-      ready_to_use[num]['rule'] = eval((ability_pool[i]["rules"]))
-      for i in range(0, len(ready_to_use[num]['rule'])):
-        ready_to_use[num]['rule'][i] = (set_get_correct_slash(sigmafolder) + set_get_correct_slash(ready_to_use[num]['rule'][i]))
       num += 1
   return ready_to_use
 
@@ -97,7 +107,6 @@ def check_single_on_caldera(id, ability_pool, logger):
     logger.warning('Ability ID: {} not found in caldera'.format(id))
   return ret
   
-
 def get_detection_rules():
   page_num = 1
   num = 0
@@ -123,12 +132,15 @@ def elastic_get_exec_status(rule_id):
     return status
 
 def elastic_get_rule_status(rule_id):
-    if rule_id == None: return
-    detection_engine = kibana_url + '/api/detection_engine/rules?rule_id=' + rule_id
-    response = requests.get(detection_engine, auth=(configfile.http_auth_user,configfile.http_auth_pass)).json()
-    status = response['enabled']
-    execstatus = response['status']
+  detection_engine = kibana_url + '/api/detection_engine/rules?rule_id=' + rule_id
+  response = requests.get(detection_engine, auth=(configfile.http_auth_user,configfile.http_auth_pass)).json()
+  if 'status_code' in response:
+    status = False
+    execstatus = "Detection not found"
     return status, execstatus
+  status = response['enabled']
+  execstatus = response['status']
+  return status, execstatus
 
 def elastic_rule_health(enabled, execstatus, csv_output, alertname, abilityid):
   if enabled != True or execstatus != "succeeded":
@@ -138,12 +150,6 @@ def elastic_rule_health(enabled, execstatus, csv_output, alertname, abilityid):
     return False
   else:
     return True
-
-def check_if_exists_on_elastic(rulenamedict, rulenamed):
-  for i in range(0,len(rulenamedict)):
-    for rulename in rulenamed:
-      if rulename in rulenamedict[i]["Name"]:
-          return True
 
 def get_elastic_alerts(rulenamedict, rule_lookup_time="5m"):
   rule_lookup_time_for_dict = "now-" + rule_lookup_time
@@ -229,25 +235,28 @@ def callelastic(Interval, alert, rule_id, limit_time, abilityid, csvpath, rule_l
       export_results(csvpath, alert, data, "Failed", abilityid)
       execution_time = 0
 
-def batch_execution(abilities, ruleset, target, bypass_ability_execution, initial_sleep_time, sleep_interval, limit_time, csvpath, rule_lookup_time, logger):
-  ability_num = len(abilities)
-  for i in range(0, ability_num):
-    abilityid = abilities[i]["id"]
-    alertname = get_alert_name(abilities[i]["rule"])
-    if alertname == None:
+def batch_execution(rules, abilities, ruleset, target, bypass_ability_execution, initial_sleep_time, sleep_interval, limit_time, csvpath, rule_lookup_time, logger, relationfile):
+  for rule in rules:
+    abilityid = get_rule_ability_id(relationfile, rule)
+    alertname = get_alert_name(ruleset, rule)
+    if alertname == "Detection not found":
+      logger.warning("Detection not found on Elastic: '{}'. Skipping".format(rule))
       continue
-    rule_id = get_rule_id(ruleset, alertname)
-    enabled, execstatus = elastic_get_rule_status(rule_id)
+    enabled, execstatus = elastic_get_rule_status(rule)
     if elastic_rule_health(enabled, execstatus, csvpath, alertname, abilityid) == False:
-      logger.warning("The detection '{}' is disabled or having errors on execution. Skipping".format(alertname))
+      if enabled == False:
+        logger.warning("The detection '{}' is disabled. Skipping".format(rule))
+      elif execstatus != "succeeded":
+        logger.warning("The detection '{}' is having errors on execution. Skipping".format(alertname))
       continue
-    if check_if_exists_on_elastic(ruleset, alertname):
+    elif not check_single_on_caldera(abilityid, abilities, logger):
+      export_results(csvpath, alertname, "N/A", "Ability not found", abilityid)
+      continue
+    else:
       execute_ability(target, abilityid, logger)
       logger.info("Sleeping {} secs before calling elastic".format(initial_sleep_time))
       sleep(initial_sleep_time)
-      callelastic(sleep_interval, alertname, rule_id, limit_time, abilityid, csvpath, rule_lookup_time, logger)
-    else:
-      logger.warning("Alert not found on Elastic")
+      callelastic(sleep_interval, alertname, rule, limit_time, abilityid, csvpath, rule_lookup_time, logger)
 
 
 def callelastic_for_parallel_batch_execution(Interval, alert, rule_id, limit_time, abilityid, csvpath, rule_lookup_time, logger):
@@ -269,69 +278,76 @@ def callelastic_for_parallel_batch_execution(Interval, alert, rule_id, limit_tim
   return is_rule_triggered
 
 
-def batch_execution_in_parallel(abilities, ruleset, target, bypass_ability_execution, initial_sleep_time, sleep_interval, limit_time, rule_lookup_time, ability_args_dict, csvpath, logger):
+def batch_execution_in_parallel(rules, abilities, ruleset, target, bypass_ability_execution, initial_sleep_time, sleep_interval, limit_time, rule_lookup_time, ability_args_dict, csvpath, logger, relationfile):
   global execution_time
-  already_triggered_rule_idx = []
-  all_abilities_status = {}
+  finished_rules = []
+  success_rules = []
+  all_rules_status = {}
   execution_time = 0
-  ability_num = len(abilities)
-  # execute all abilities...
-  for i in range(0, ability_num):
-    abilityid = abilities[i]["id"]
-    abilityname = abilities[i]["Name"]
-    alertname = get_alert_name(abilities[i]["rule"])
-    rule_id = get_rule_id(ruleset, alertname)
-    enabled, execstatus = elastic_get_rule_status(rule_id)
+  counter = 0
+  rule_num = len(rules)
+  for rule in rules:
+    abilityid = get_rule_ability_id(relationfile, rule)
+    abilityname = get_rule_ability_name(abilities, abilityid)
+    alertname = get_alert_name(ruleset, rule)
+    enabled, execstatus = elastic_get_rule_status(rule)
     if elastic_rule_health(enabled, execstatus, csvpath, alertname, abilityid) == False:
-      logger.warning("The detection '{}' is disabled or having errors on execution. Skipping".format(alertname))
+      if enabled == False:
+        logger.warning("The detection '{}' is disabled. Skipping".format(rule))
+        finished_rules.append(rule)
+      elif execstatus != "succeeded":
+        logger.warning("The detection '{}' is having errors on execution. Skipping".format(alertname))
+        finished_rules.append(rule)
       continue
-    all_abilities_status[abilityid] = {
-        'Ability': {
-          'ID': abilityid, 'Name': abilityname
-          },
-        'Rule': {
-          'ID': rule_id, 'Name': alertname, 'Success': 'No'
-          }
-        }
-    if check_if_exists_on_elastic(ruleset, alertname):
-      execute_ability(target, abilityid, logger, ability_args=ability_args_dict.get(abilityid))
-      logger.info(f'Ability {i+1} (named: {abilityname}) out of {ability_num} executed...')
+    elif not check_single_on_caldera(abilityid, abilities, logger):
+      export_results(csvpath, alertname, "N/A", "Ability not found", abilityid)
+      continue
     else:
-      logger.warning('Ability not found on caldera...')
-      logger.warning(f'Ability {i+1} (named: {abilityname}) out of {ability_num} could not be executed...')
+      if ability_args_dict == None:
+        execute_ability(target, abilityid, logger)
+      else:
+        execute_ability(target, abilityid, logger, ability_args=ability_args_dict.get(abilityid))
+      logger.info('Executing Ability {} out of {} (Named: {})'.format(counter, rule_num, abilityname))
+    all_rules_status[rule] = {
+      'Ability': {
+        'ID': abilityid, 'Name': abilityname
+      },
+      'Rule': {
+        'ID': rule, 'Name': alertname, 'Success': 'No'
+      }
+    }
   sleep(initial_sleep_time)
   while(execution_time <= limit_time):
-    for i in range(0, ability_num):
-      if len(already_triggered_rule_idx) == ability_num:
+    for rule in rules:
+      if len(finished_rules) == rule_num:
         # if all abilities executions have already returned results, then "for" loop as well as "while" loop would be needed to be broken
         execution_time += limit_time
         break
-      if i in already_triggered_rule_idx: 
+      if rule in finished_rules: 
         # if rule is already triggered, then skip rechecks of that
         logger.info('Corresponding alert rule {} for ability {} ({}) already executed & returned result...'.format(alertname, abilityid, abilityname))
         continue
-      abilityid = abilities[i]["id"]
-      abilityname = abilities[i]["Name"]
-      alertname = get_alert_name(abilities[i]["rule"])
-      rule_id = get_rule_id(ruleset, alertname)
-      if check_if_exists_on_elastic(ruleset, alertname):
-        is_rule_triggered = callelastic_for_parallel_batch_execution(sleep_interval, alertname, rule_id, limit_time, abilityid, csvpath, rule_lookup_time, logger)
-        if is_rule_triggered: 
-          # if rule has triggered, add it to the list of rules that no longer need to be checked
-          all_abilities_status[abilityid]['Rule']['Success'] = 'Yes'
-          already_triggered_rule_idx.append(i)
-      else:
-        logger.warning('Corresponding alert rule {} for ability {} not found on elastic...'.format(alertname, abilityname))
+      abilityid = get_rule_ability_id(relationfile, rule)
+      abilityname = get_rule_ability_name(abilities, abilityid)
+      alertname = get_alert_name(ruleset, rule)
+      enabled, execstatus = elastic_get_rule_status(rule)
+      is_rule_triggered = callelastic_for_parallel_batch_execution(sleep_interval, alertname, rule, limit_time, abilityid, csvpath, rule_lookup_time, logger)
+      if is_rule_triggered: 
+        # if rule has triggered, add it to the list of rules that no longer need to be checked
+        all_rules_status[rule]['Rule']['Success'] = 'Yes'
+        finished_rules.append(rule)
+        success_rules.append(rule)
     execution_time += sleep_interval
     logger.info("Sleeping {} secs before calling elastic".format(sleep_interval))
+    if len(finished_rules) == rule_num:
+      break
     sleep(sleep_interval)
-  logger.info('{} out of {} rules were successfully triggered...'.format(len(already_triggered_rule_idx), ability_num))
-  for ab, ab_vals in all_abilities_status.items():
+  logger.info('{} out of {} rules were successfully triggered...'.format(len(success_rules), rule_num))
+  for ab, ab_vals in all_rules_status.items():
     if ab_vals.get('Rule').get('Success') == 'Yes':
       logger.info('Ability ID {} ({}) were successful...'.format(ab_vals.get('Ability').get('ID'), ab_vals.get('Ability').get('Name')))
     else:
       logger.warn('Ability ID {} ({}) were unsuccessful...'.format(ab_vals.get('Ability').get('ID'), ab_vals.get('Ability').get('Name')))
-  pprint(all_abilities_status)
 
 
 def update_ability_args(ability_args):

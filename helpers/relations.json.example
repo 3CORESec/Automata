@@ -1,0 +1,8 @@
+{
+    "Automata": 
+        [
+            { "RuleID": "4ce8661b-a4d0-413d-8819-0a1d70338547", "AbilityID": [ "2e1ff803-6514-49be-a4bd-10a8f084a05f", "dae5ba70-8e41-4eae-bce9-8f447c478382" ] },
+            { "RuleID": "48c8bf87-42f3-4bd5-aaf1-5fdc4e61fba0", "AbilityID": "dae5ba70-8e41-4eae-bce9-8f447c478382" },
+            { "RuleID": "48c8bf87-42f3-4bd5-aaf1-5fdc4e61fba1", "AbilityID": "dae5ba70-8e41-4eae-bce9-8f447c478382" }
+        ]
+}

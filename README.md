@@ -37,7 +37,6 @@ Once a problem is identified early, SOC teams can fix these problems before this
 This project uses:
 
 * Elastic
-* Sigma Rules
 * Caldera
 * Python
 
@@ -76,27 +75,12 @@ In the example below we'll task Automata with the goal of validating an AWS S3 d
 
 ## Run Modes
 
-There are currently three modes of execution: `Individual Easy`, `Batch` and `Batch Execution In Parallel`.
+There are currently two modes of execution: `Batch` and `Batch Execution In Parallel`.
 
-1. `Individual Easy` executes the workflow for a single Ability.
-2. `Batch` executes a list of abilities, one by one.
-3. `Batch Execution In Parallel` executes a list of abilities concurrently.
+1. `Batch` executes a list of abilities, one by one.
+2. `Batch Execution In Parallel` executes a list of abilities concurrently.
 
-### 1. Individual Easy:
-
-**Required params:**
-
-* `-ie`: Switch to enable "Individual Easy" execution type.
-* `-afp`: Path to the ability file.
-* `-s`: Path to sigma folder. This path when combined with rules path from ability file, makes up the path to the ability relevant rule file. 
-
-**Example:**
-
-```
-python.exe .\main.py -afp ..\caldera\detection-validation\cloud\aws\guardduty\aws_guardduty_finding_archived.yml -s ..\sigma\rules\ -t jilffn
-```
-
-### 2. Batch:
+### 1. Batch:
 
 **Required params:**
 
@@ -107,10 +91,10 @@ python.exe .\main.py -afp ..\caldera\detection-validation\cloud\aws\guardduty\aw
 **Example:**
 
 ```
-python .\main.py -t zbuvyg -af 'C:/Users/Jonhnathan/Downloads/caldera-main/caldera-main/detection-validation/windows/' -s "C:/Users/Jonhnathan/Downloads/sigma-master/sigma-master/rules/endpoint/windows/"
+python .\main.py -t rkersr -rf .\helpers\relations.json -b True
 ```
 
-### 3. Batch Execution In Parallel:
+### 2. Batch Execution In Parallel:
 
 **Required params:**
 
@@ -122,7 +106,7 @@ python .\main.py -t zbuvyg -af 'C:/Users/Jonhnathan/Downloads/caldera-main/calde
 **Example:**
 
 ```
-python.exe .\main.py -beip -af ..\caldera\detection-validation\cloud\aws\guardduty\ -s ..\sigma\rules\ -t dixiib;
+python .\main.py -t rkersr -rf .\helpers\relations.json -beip
 ```
 
 ### Sample output

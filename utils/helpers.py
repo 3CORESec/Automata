@@ -2,6 +2,8 @@ import os
 import yaml
 import logging
 import colorlog
+import json
+import random
 from utils.back import *
 
 
@@ -40,93 +42,36 @@ def setup_logger(log_fmt="%(log_color)s%(asctime)s:%(levelname)s:%(message)s", l
 
 	return logger
 
-
-def get_correct_slash():
-  if os.name == 'nt': return '\\'
-  else: return '/'
-
-
-def set_get_correct_slash(mstring):
-  if mstring is None: return ''
-  if os.name == 'nt': return mstring.replace('/', '\\')
-  else: return mstring.replace('\\', '/')
+def get_alert_name(ruleset, ruleid):
+  for i in range(0,len(ruleset)):
+    if ruleset[i]["RuleID"] == ruleid:
+      return ruleset[i]["Name"]
+  return "Detection not found"
 
 
-def list_ability_files(path):
-    return os.listdir(path)
-
-def parse_yaml(yamlfile):
-  ret = None
-  if yamlfile.endswith(".yml"): pass
-  else: return
-  try:
-    with open(yamlfile, 'r') as file:
-        ret = yaml.full_load(file)
-  except Exception as e:
-    print('Exception {} occurred in parse_yaml for file {}...'.format(e, yamlfile))
-  return ret
-
-def get_rule_id(ruleset, rulename):
-    if rulename[0] == None: return
-    for i in range(0,len(ruleset)):
-      
-      temp = rulename
-      if type(rulename) == list: temp = rulename[0]
-      
-      if temp in ruleset[i]["Name"]:
-          return ruleset[i]["RuleID"]
-
-def get_rule_ids(ruleset, rulenamedict):
-    if rulename == None: return
-    for i in range(0,len(ruleset)):
-      for rulename in rulenamedict:
-        if rulename in ruleset[i]["Name"]:
-            return ruleset[i]["RuleID"]
-
-def get_ability_ids_from_file(abilitylist, abilityfolder):
+def get_ability_ids_from_relations_file(relationfile):
   ability_ids = []
-  for ability in abilitylist:
-    file_path = abilityfolder + ability
-    parsed = parse_yaml(file_path)
-    if type(parsed) == list:
-      ability_ids.append(parsed[0]['id'])
-    elif type(parsed) == dict:
-      ability_ids.append(parsed['id'])
-    elif parsed is None: continue
-    else: pass
+  with open(relationfile) as j:
+    data = json.load(j)
+    for i in data['Automata']:
+      ability_ids.append(i["AbilityID"])
   return ability_ids
 
+def get_rule_ability_id(relationfile, ruleid):
+  with open(relationfile) as j:
+    data = json.load(j)
+    for i in data['Automata']:
+      if ruleid == i["RuleID"]:
+        if type(i["AbilityID"]) == list:
+          n = random.randint(0,len(i["AbilityID"]) - 1)
+          return i["AbilityID"][n]
+        else:
+          return i["AbilityID"]
 
-def get_object_from_yml_ability_file(ability_file_path, object='id'):
-  ability_id = None
-  parsed = parse_yaml(ability_file_path)
-  if type(parsed) == list:
-    ability_id = parsed[0][object]
-  elif type(parsed) == dict:
-    ability_id = parsed[object]
-  else: pass
-  return ability_id
-
-
-def get_alert_name(sigmarule):
-  alertnamedict = []
-  if type(sigmarule) == list:
-    for rule in sigmarule:
-      try:
-        parsed = parse_yaml(rule)
-        alertnamedict.append(parsed['title'])
-      except TypeError:
-        print("Error in the: " + rule)
-        return
-  elif type(sigmarule) == str:
-    try:
-      parsed = parse_yaml(sigmarule)
-      alertnamedict.append(parsed['title'])
-    except TypeError:
-      print("Error in the: " + sigmarule)
-      return
-  else: pass
-  return alertnamedict
+def get_rule_ability_name(abilities, abilityid):
+  for i in range(0,len(abilities)):
+    if abilities[i]["id"] == abilityid:
+      return abilities[i]["Name"]
 
 def initialize_csv(csv_output):
   open(csv_output, 'w+')
