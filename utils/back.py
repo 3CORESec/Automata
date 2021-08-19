@@ -300,6 +300,7 @@ def batch_execution_in_parallel(rules, abilities, ruleset, target, bypass_abilit
         finished_rules.append(rule)
       continue
     elif not check_single_on_caldera(abilityid, abilities, logger):
+      finished_rules.append(rule)
       export_results(csvpath, alertname, "N/A", "Ability not found", abilityid)
       continue
     else:
