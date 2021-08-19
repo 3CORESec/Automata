@@ -10,7 +10,6 @@ import json
 
 def setup_args():
     parser = argparse.ArgumentParser(os.path.basename(__file__))
-    parser.add_argument('-afp', '--ability_file_path', help='Path to local ability file. Eg: /path/to/ability/file.yml')
     parser.add_argument('-rf', '--relationfile', help='The file that contains the relations between Detection Rules and Abilities')
     parser.add_argument('-t', '--target', help='The target agent')
     parser.add_argument('-beip', '--batch_execution_in_parallel', dest='batch_execution_in_parallel', action='store_true', help='A switch that enabled batch execution of the abilities contained on the specified ability folder and caldera in a parallel fashion where all abilities are executed at once and checks for their triggers are also executed in parallel...')
@@ -18,7 +17,6 @@ def setup_args():
     parser.add_argument('-m', '--metrics', help='File to metrics', default='info.csv')
     parser.add_argument('-p', '--pdf', help='File to Output PDF Report', default='automata.pdf')
     parser.add_argument('-b', '--batch', help='Batch Execution of the tests on Rules specified in the relations file')
-    parser.add_argument('-ie', '--individual_easy', dest='individual_easy', action='store_true', help='A switch that enables easier individual execution of an ability by just pointing to ability file, ability_args file and sigma rules folder...')
     parser.add_argument('-bae', '--bypass_ability_execution', dest='bypass_ability_execution', action='store_true', help='Switch to bypass ability execution phase and directly query elastic.')
     parser.add_argument('-ist', '--initial_sleep_time', type=int, default=120, help='Initial sleep time in seconds before making first call to elastic to check for detection...')
     parser.add_argument('-ilt', '--initial_limit_time', type=int, default=300, help='Limit execution time in seconds before skiping to the next test')
