@@ -54,7 +54,11 @@ def get_ability_ids_from_relations_file(relationfile):
   with open(relationfile) as j:
     data = json.load(j)
     for i in data['Automata']:
-      ability_ids.append(i["AbilityID"])
+      if type(i["AbilityID"]) == list:
+        for i in i["AbilityID"]:
+          ability_ids.append(i)
+      else:
+        ability_ids.append(i["AbilityID"])
   return ability_ids
 
 def get_rule_ability_id(relationfile, ruleid):
