@@ -75,38 +75,37 @@ In the example below we'll task Automata with the goal of validating an AWS S3 d
 
 ## Run Modes
 
-There are currently two modes of execution: `Batch` and `Batch Execution In Parallel`.
+There are currently two modes of execution: `Batch` and `Concurrent`.
 
 1. `Batch` executes a list of abilities, one by one.
-2. `Batch Execution In Parallel` executes a list of abilities concurrently.
+2. `Concurrent` executes a list of abilities concurrently.
 
 ### 1. Batch:
 
 **Required params:**
 
 * `-t`: The Target Caldera Agent
-* `-af`: The folder containing the Caldera ability files
-* `-s`: The folder containing the Sigma Rules installed on the Elastic SIEM
+* `-rf`: The relations file containg the ruleid to abilityid links
+* `-b`: Batch Mode Switch
 
 **Example:**
 
 ```
-python .\main.py -t rkersr -rf .\helpers\relations.json -b True
+python .\main.py -t rkersr -rf .\relations.json -b
 ```
 
-### 2. Batch Execution In Parallel:
+### 2. Concurrent:
 
 **Required params:**
 
-* `-beip`: Switch that enables "Batch Execution In Parallel" execution type.
+* `-bc`: Switch that enables "Concurrent" execution type.
 * `-t`: The Target Caldera Agent
-* `-af`: The folder containing the Caldera ability files
-* `-s`: The folder containing the Sigma Rules installed on the Elastic SIEM
+* `-rf`: The relations file containg the ruleid to abilityid links
 
 **Example:**
 
 ```
-python .\main.py -t rkersr -rf .\helpers\relations.json -beip
+python .\main.py -t hvozis -rf .\relations.json -bc
 ```
 
 ### Sample output

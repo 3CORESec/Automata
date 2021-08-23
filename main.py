@@ -16,7 +16,7 @@ def setup_args():
     parser.add_argument('-o', '--output', help='File to Output CSV results', default='automata.csv')
     parser.add_argument('-m', '--metrics', help='File to metrics', default='info.csv')
     parser.add_argument('-p', '--pdf', help='File to Output PDF Report', default='automata.pdf')
-    parser.add_argument('-b', '--batch', help='Batch Execution of the tests on Rules specified in the relations file')
+    parser.add_argument('-b', '--batch', action='store_true', help='Batch Execution of the tests on Rules specified in the relations file')
     parser.add_argument('-bae', '--bypass_ability_execution', dest='bypass_ability_execution', action='store_true', help='Switch to bypass ability execution phase and directly query elastic.')
     parser.add_argument('-ist', '--initial_sleep_time', type=int, default=120, help='Initial sleep time in seconds before making first call to elastic to check for detection...')
     parser.add_argument('-ilt', '--initial_limit_time', type=int, default=300, help='Limit execution time in seconds before skiping to the next test')
