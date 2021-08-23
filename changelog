@@ -1,3 +1,20 @@
+23/04/2021
+------------
+- Version 0.4
+        - Replaces "batch execution in Parallel" for a concurrency implementation
+        - Removes Individual_easy mode
+        - Fix relation files dict minor bugs
+        - Adds a script to generate relations file based on sigma custom fields
+08/04/2021
+------------
+- Version 0.3
+        - Remove dependency on Caldera and Sigma Files
+        - Adds the concept of Relations file
+        - Remove unused functions
+        - Reformulate Rule health checks
+        - Modifies Batch modes to work oriented by Rules and not Abilities
+        - Random Ability execution when there are more than one ability in a rule
+
 04/23/2021
 ------------
 - Version 0.2
