@@ -71,7 +71,7 @@ def generate_report(csvf, outputf, infof, logger):
         pagesize=letter
     )
     all = list()
-    paragraph = ParagraphStyle('', aligment=10)
+    paragraph = ParagraphStyle('', alignment=10)
     generate_pie(dt)
     paragraph_1 = Paragraph("Result Percentage", ParagraphStyle('kk', fontSize=18, alignment=1), )
     all.append(paragraph_1)
