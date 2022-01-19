@@ -19,7 +19,7 @@ def setup_args():
     parser.add_argument('-b', '--batch', action='store_true', help='Batch Execution of the tests on Rules specified in the relations file')
     parser.add_argument('-bae', '--bypass_ability_execution', dest='bypass_ability_execution', action='store_true', help='Switch to bypass ability execution phase and directly query elastic.')
     parser.add_argument('-ist', '--initial_sleep_time', type=int, default=120, help='Initial sleep time in seconds before making first call to elastic to check for detection...')
-    parser.add_argument('-ilt', '--initial_limit_time', type=int, default=300, help='Limit execution time in seconds before skiping to the next test')
+    parser.add_argument('-ilt', '--initial_limit_time', type=int, default=300, help='Limit execution time in seconds before skipping to the next test')
     parser.add_argument('-si', '--sleep_interval', type=int, default=30, help='Sleep time in seconds before making calls after the first one, to elastic to check for detection...')
     parser.add_argument('-rlt', '--rule_lookup_time', type=str, default="5m", help='Rule lookup time to check elastic rules triggered in the past. Eg: -rlt 5m...')
     parser.add_argument('-aa', '--ability_args', help='Arguments that are required by advanced abilities to be passed as variables for successful execution. Eg: field_name=value,field_name_2=value_2,...')

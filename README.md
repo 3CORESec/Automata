@@ -85,7 +85,7 @@ There are currently two modes of execution: `Batch` and `Concurrent`.
 **Required params:**
 
 * `-t`: The Target Caldera Agent
-* `-rf`: The relations file containg the ruleid to abilityid links
+* `-rf`: The relations file containing the ruleid to abilityid links
 * `-b`: Batch Mode Switch
 
 **Example:**
@@ -100,7 +100,7 @@ python .\main.py -t rkersr -rf .\relations.json -b
 
 * `-bc`: Switch that enables "Concurrent" execution type.
 * `-t`: The Target Caldera Agent
-* `-rf`: The relations file containg the ruleid to abilityid links
+* `-rf`: The relations file containing the ruleid to abilityid links
 
 **Example:**
 

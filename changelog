@@ -35,7 +35,7 @@
         - Changes functions to use rule_id instead of id
         - Small improvements:
                 - Parsing of Ability files
-                - Reduced the ammount of the default output messages
+                - Reduced the amount of the default output messages
                 - Adds Pipfile
                 - Better handling of the output CSV file
                 - Remove hardcoded values for output
@@ -46,7 +46,7 @@
 04/21/2021
 ------------
 - Version 0.0.9
-        - Adds Paralel Batch Execution Capability
+        - Adds Parallel Batch Execution Capability
         - Adds Logging Capabilities
 
 03/26/2021
